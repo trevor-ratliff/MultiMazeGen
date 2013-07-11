@@ -3,7 +3,7 @@ MultiMazeGen
 
 Maze generation tool using multiple maze algorithms in javascript.
 
-Currently the only complete algorythm is a modified recursive backtracker.
+Currently the only complete algorithm is a modified recursive backtracker.
 
 There is a stub for a recursive division generator.
 
@@ -21,13 +21,13 @@ var lobjMaze = new MazeMap(lintHeight, lintWidth);
 ```
 
 
-Initialize the maze. Passing in an optional options object with 'Walls' and/or 'Algorythm' properties.
+Initialize the maze. Passing in an optional options object with 'Walls' and/or 'Algorithm' properties.
 The Walls property specifies weather walls should default to up or down [true | false].
-The Algorythm property indicates the type of algorythm to use in the maze generation.
+The Algorithm property indicates the type of algorithm to use in the maze generation.
 ```javascript
-lobjMaze.Init({'Walls': true, 'Algorythm': 'RecursiveBackTracker'});
+lobjMaze.Init({'Walls': true, 'Algorithm': 'RecursiveBackTracker'});
 ```
-Implemented Algorythms:
+Implemented Algorithms:
  - RecursiveBackTracker (default)
 
 

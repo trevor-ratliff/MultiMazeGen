@@ -374,7 +374,7 @@ function MazeMap (vintRows, vintColumns) {
                     this.Map[lintII][lintNN].Borders.W = true;
                 }
                 
-                if (lintII == vintRows-1) {
+                if (lintII == this.Rows-1) {
                     this.Map[lintII][lintNN].Borders.S = true;
                 }
             }

@@ -242,9 +242,21 @@ function WallMap (vstrMaze) {
     this.IsWall = function (vintRow, vintColumn) {
         var lblnReturn = false;
         var lstrChar = typeof this._arrWalls[vintRow] != "undefined" ? 
-            this._arrWalls[vintRow].substr(vintColumn, 1) : "#";
+            this._arrWalls[vintRow].substr(vintColumn, 1) : "";
         
         if (lstrChar == "#") {
+            lblnReturn = true;
+        }
+        
+        return lblnReturn;
+    };
+    
+    this.IsBorder = function (vintRow, vintColumn) {
+        var lblnReturn = false;
+        var lstrChar = typeof this._arrWalls[vintRow] != "undefined" ? 
+            this._arrWalls[vintRow].substr(vintColumn, 1) : "";
+        
+        if (lstrChar == "@") {
             lblnReturn = true;
         }
         
@@ -282,9 +294,9 @@ function WallMap (vstrMaze) {
 /// @endverbatim
 //====
 function MazeMap (vintRows, vintColumns) {
-    this.Columns = typeof vintColumns !== 'number' ? 10 : vintColumns;
-    this.Rows = typeof vintRows !== 'number' ? 5 : vintRows;
-    this.TotalCells = vintColumns * vintRows;   //(vintColumns + 1) * (vintRows + 1);
+    this.Columns = typeof vintColumns !== 'number' ? 10 : Math.floor((vintColumns - 1)/2);
+    this.Rows = typeof vintRows !== 'number' ? 5 : Math.floor((vintRows-1)/2);
+    this.TotalCells = this.Columns * this.Rows;     //vintColumns * vintRows;   //(vintColumns + 1) * (vintRows + 1);
     this.VisitedCells = 0;
     this.BackTrackPercent = arguments.length > 2 ? 
         typeof arguments[2] !== 'number' ? arguments[2] : 0.65 : 0.65;
@@ -411,7 +423,7 @@ function MazeMap (vintRows, vintColumns) {
         //----
         // generate first row of text
         //----
-        lstrLine1 = "\n#";
+        lstrLine1 = "\n@";
         for (var lintNN = 0; lintNN < this.Columns; lintNN ++) {
             //----
             // test for borders or walls
@@ -419,7 +431,7 @@ function MazeMap (vintRows, vintColumns) {
             if (this.Map[0][lintNN].Borders.N ||
                 this.Map[0][lintNN].Walls.N) 
             {
-                lstrLine1 += "##";
+                lstrLine1 += this.Map[0][lintNN].Borders.N ? "@@" : "##";
             } else {
                 lstrLine1 += " #";
             }
@@ -435,7 +447,7 @@ function MazeMap (vintRows, vintColumns) {
         //----
         for (var lintII = 0; lintII < this.Rows; lintII++) {
             lstrLine1 = "";
-            lstrLine2 = "#";
+            lstrLine2 = "@";
             
             //----
             // test for borders or walls on west side
@@ -443,7 +455,7 @@ function MazeMap (vintRows, vintColumns) {
             if (this.Map[lintII][0].Borders.W ||
                 this.Map[lintII][0].Walls.W) 
             {
-                lstrLine1 += "#";
+                lstrLine1 += this.Map[lintII][0].Borders.W ? "@" : "#";
             } else {
                 lstrLine1 += " ";
             }
@@ -460,7 +472,7 @@ function MazeMap (vintRows, vintColumns) {
                 if (this.Map[lintII][lintNN].Borders.E ||
                     this.Map[lintII][lintNN].Walls.E) 
                 {
-                    lstrLine1 += " #";
+                    lstrLine1 += this.Map[lintII][lintNN].Borders.E ? " @" : " #";
                 } else {
                     lstrLine1 += "  ";
                 }
@@ -471,9 +483,10 @@ function MazeMap (vintRows, vintColumns) {
                 if (this.Map[lintII][lintNN].Borders.S ||
                     this.Map[lintII][lintNN].Walls.S) 
                 {
-                    lstrLine2 += "##";
+                    lstrLine2 += this.Map[lintII][lintNN].Borders.S ? "@@" : 
+                        lintNN == this.Columns-1 ? "#@" : "##";
                 } else {
-                    lstrLine2 += " #";
+                    lstrLine2 += lintNN == this.Columns-1 ? " @" : " #";
                 }
             }
             
@@ -548,177 +561,202 @@ function MazeMap (vintRows, vintColumns) {
         // walk through all cells adding to VisitedCells when entering a new one
         //----
         while (this.VisitedCells < this.TotalCells) {
-            //~ console.log("row: " + lintRow + ", column: " + lintColumn);
-            var lintRandom = 0;
-            var lmcCurrent = this.Map[lintRow][lintColumn];
-            var lmcNext = null;
-            var larrNeighbors = [];
-            
-            //----
-            // mark cell visited and incement this.VisitedCells
-            //----
-            lmcCurrent.Visited += 1;
-            if (lmcCurrent.Visited < 2) this.VisitedCells += 1;
-            this.Stack.push(lintRow + "," + lintColumn);
-            
-            //----
-            // get neighbor cells
-            //----
-            // North Cell
-            //----
-            if (!lmcCurrent.Borders.N && lintRow > 0) {
-                if (this.Map[lintRow-1][lintColumn].Visited < 1) {
-                    larrNeighbors.push(this.Map[lintRow-1][lintColumn]);
-                }
-            }
-            
-            //----
-            // East Cell
-            //----
-            if (!lmcCurrent.Borders.E && lintColumn < this.Columns) {
-                if (this.Map[lintRow][lintColumn+1].Visited < 1) {
-                    larrNeighbors.push(this.Map[lintRow][lintColumn+1]);
-                }
-            }
-            
-            //----
-            // West Cell
-            //----
-            if (!lmcCurrent.Borders.W && lintColumn > 0) {
-                if (this.Map[lintRow][lintColumn-1].Visited < 1) {
-                    larrNeighbors.push(this.Map[lintRow][lintColumn-1]);
-                }
-            }
-            
-            //----
-            // South Cell
-            //----
-            if (!lmcCurrent.Borders.S && lintRow < this.Rows) {
-                if (this.Map[lintRow+1][lintColumn].Visited < 1) {
-                    larrNeighbors.push(this.Map[lintRow+1][lintColumn]);
-                }
-            }
-            
-            //----
-            // test for availible neighbors
-            //----
-            if (larrNeighbors.length > 0) {
-                //----
-                // add this coordinate to the junction stack
-                //----
-                this.JunctionStack.push(lintRow + "," + lintColumn);
+            try {
+                //~ console.log("row: " + lintRow + ", column: " + lintColumn);
+                var lintRandom = 0;
+                var lmcCurrent = this.Map[lintRow][lintColumn];
+                var lmcNext = null;
+                var larrNeighbors = [];
                 
                 //----
-                // randomly pick a neighbor
+                // mark cell visited and incement this.VisitedCells
                 //----
-                lintRandom = Math.floor(Math.random() * larrNeighbors.length)
-                
-                try {
-                    lmcNext = larrNeighbors[lintRandom];
-                } catch (ex) {
-                    console.log(ex.toString());
-                }
+                lmcCurrent.Visited += 1;
+                if (lmcCurrent.Visited < 2) this.VisitedCells += 1;
+                this.Stack.push(lintRow + "," + lintColumn);
                 
                 //----
-                // join current and next
+                // get neighbor cells
                 //----
-                if (lmcCurrent._row != lmcNext._row) {
-                    if (lmcCurrent._row > lmcNext._row) {
-                        //----
-                        // join to current's north
-                        //----
-                        lmcCurrent.Walls.N = false;
-                        lmcNext.Walls.S = false;
-                        
-                    } else {
-                        //----
-                        // join to current's south
-                        //----
-                        lmcCurrent.Walls.S = false;
-                        lmcNext.Walls.N = false;
-                        
-                    }
-                } else {
-                    if (lmcCurrent._column < lmcNext._column) {
-                        //----
-                        // join to current's east
-                        //----
-                        lmcCurrent.Walls.E = false;
-                        lmcNext.Walls.W = false;
-                        
-                    } else {
-                        //----
-                        // join to current's west
-                        //----
-                        lmcCurrent.Walls.W = false;
-                        lmcNext.Walls.E = false;
+                // North Cell
+                //----
+                if (!lmcCurrent.Borders.N && lintRow > 0) {
+                    if (this.Map[lintRow-1][lintColumn].Visited < 1) {
+                        larrNeighbors.push(this.Map[lintRow-1][lintColumn]);
                     }
                 }
                 
                 //----
-                // set lintRow and lintColumn to coordinates from lmcNext
+                // East Cell
                 //----
-                lintRow = lmcNext._row;
-                lintColumn = lmcNext._column;
-                
-            } else {
-                var larrCoords = null;
-                
-                //----
-                // process dead end
-                //----
-                lmcCurrent.BackTrack.N = lmcCurrent.Walls.N;
-                lmcCurrent.BackTrack.E = lmcCurrent.Walls.E;
-                lmcCurrent.BackTrack.W = lmcCurrent.Walls.W;
-                lmcCurrent.BackTrack.S = lmcCurrent.Walls.S;
-                
-                //----
-                // randomly choose to use the newest cell in JunctionStack
-                //      or a random one using BackTrackPercent as bias
-                //----
-                if (Math.random() > this.BackTrackPercent) {
-                    //----
-                    // pop last junction from JunctionStack to use as next cell
-                    //----
-                    larrCoords = this.JunctionStack.pop().split(",");
-                } else {
-                    //----
-                    // make sure we have items left in our junction stack
-                    //----
-                    if (this.JunctionStack.length > 0) {
-                        var lintRandom = Math.floor(Math.random() * 
-                            this.JunctionStack.length);
-                        //----
-                        // pop a random junction out
-                        //----
-                        larrCoords = this.JunctionStack.splice(lintRandom, 1)[0].split(",");
-                    } else {
-                        //----
-                        // find another valid cell somehow
-                        //----
-                        larrCoords = ["0,0"];
+                if (!lmcCurrent.Borders.E && lintColumn < this.Columns) {
+                    if (this.Map[lintRow][lintColumn+1].Visited < 1) {
+                        larrNeighbors.push(this.Map[lintRow][lintColumn+1]);
                     }
                 }
                 
                 //----
-                // set lintRow and lintColumn for next iteration
+                // West Cell
                 //----
-                lintRow = parseInt(larrCoords[0]);
-                lintColumn = parseInt(larrCoords[1]);
-            }
-            
-            //----
-            // check to make sure we have valid numbers for lintRow & lintColumn
-            //----
-            if (typeof lintRow !== "number" || typeof lintColumn !== "number") {
-                if (this.JunctionStack.length >= 0) {
-                    var larrNext = this.JunctionStack.pop()[0].split(",");
-                    lintRow = parseInt(larrNext[0]);
-                    lintColumn = parseInt(larrNext[1]);
-                } else {
-                    lintRow = 0;
-                    lintColumn = 0;
+                if (!lmcCurrent.Borders.W && lintColumn > 0) {
+                    if (this.Map[lintRow][lintColumn-1].Visited < 1) {
+                        larrNeighbors.push(this.Map[lintRow][lintColumn-1]);
+                    }
                 }
+                
+                //----
+                // South Cell
+                //----
+                if (!lmcCurrent.Borders.S && lintRow < this.Rows) {
+                    if (this.Map[lintRow+1][lintColumn].Visited < 1) {
+                        larrNeighbors.push(this.Map[lintRow+1][lintColumn]);
+                    }
+                }
+                
+                //----
+                // test for availible neighbors
+                //----
+                if (larrNeighbors.length > 0) {
+                    //----
+                    // add this coordinate to the junction stack
+                    //----
+                    this.JunctionStack.push(lintRow + "," + lintColumn);
+                    
+                    //----
+                    // randomly pick a neighbor
+                    //----
+                    lintRandom = Math.floor(Math.random() * larrNeighbors.length)
+                    
+                    try {
+                        lmcNext = larrNeighbors[lintRandom];
+                    } catch (ex) {
+                        console.log(ex.toString());
+                    }
+                    
+                    //----
+                    // join current and next
+                    //----
+                    if (lmcCurrent._row != lmcNext._row) {
+                        if (lmcCurrent._row > lmcNext._row) {
+                            //----
+                            // join to current's north
+                            //----
+                            lmcCurrent.Walls.N = false;
+                            lmcNext.Walls.S = false;
+                            
+                        } else {
+                            //----
+                            // join to current's south
+                            //----
+                            lmcCurrent.Walls.S = false;
+                            lmcNext.Walls.N = false;
+                            
+                        }
+                    } else {
+                        if (lmcCurrent._column < lmcNext._column) {
+                            //----
+                            // join to current's east
+                            //----
+                            lmcCurrent.Walls.E = false;
+                            lmcNext.Walls.W = false;
+                            
+                        } else {
+                            //----
+                            // join to current's west
+                            //----
+                            lmcCurrent.Walls.W = false;
+                            lmcNext.Walls.E = false;
+                        }
+                    }
+                    
+                    //----
+                    // set lintRow and lintColumn to coordinates from lmcNext
+                    //----
+                    lintRow = lmcNext._row;
+                    lintColumn = lmcNext._column;
+                    
+                } else {
+                    var larrCoords = null;
+                    
+                    //----
+                    // process dead end
+                    //----
+                    lmcCurrent.BackTrack.N = lmcCurrent.Walls.N;
+                    lmcCurrent.BackTrack.E = lmcCurrent.Walls.E;
+                    lmcCurrent.BackTrack.W = lmcCurrent.Walls.W;
+                    lmcCurrent.BackTrack.S = lmcCurrent.Walls.S;
+                    
+                    //----
+                    // randomly choose to use the newest cell in JunctionStack
+                    //      or a random one using BackTrackPercent as bias
+                    //----
+                    if (Math.random() > this.BackTrackPercent) {
+                        //----
+                        // pop last junction from JunctionStack to use as next cell
+                        //----
+                        larrCoords = this.JunctionStack.pop().split(",");
+                    } else {
+                        //----
+                        // make sure we have items left in our junction stack
+                        //----
+                        if (this.JunctionStack.length > 0) {
+                            var lintRandom = Math.floor(Math.random() * 
+                                this.JunctionStack.length);
+                            //----
+                            // pop a random junction out
+                            //----
+                            larrCoords = this.JunctionStack.splice(lintRandom, 1)[0].split(",");
+                        } else {
+                            //----
+                            // find another valid cell somehow
+                            //----
+                            larrCoords = ["0,0"];
+                        }
+                    }
+                    
+                    //----
+                    // set lintRow and lintColumn for next iteration
+                    //----
+                    lintRow = parseInt(larrCoords[0]);
+                    lintColumn = parseInt(larrCoords[1]);
+                }
+                
+                //----
+                // check to make sure we have valid numbers for lintRow & lintColumn
+                //----
+                if (typeof lintRow !== "number" || typeof lintColumn !== "number") {
+                    if (this.JunctionStack.length >= 0) {
+                        var larrNext = this.JunctionStack.pop()[0].split(",");
+                        lintRow = parseInt(larrNext[0]);
+                        lintColumn = parseInt(larrNext[1]);
+                    } else {
+                        lintRow = 0;
+                        lintColumn = 0;
+                    }
+                }
+                
+            } catch (ex) {
+                var lstrMessage = "";
+                
+                if (lmcCurrent) {
+                    lstrMessage += "\nCurrent: " + lmcCurrent.toString();
+                    lstrMessage += "\nVisited: " + lmcCurrent.Visited;
+                }
+                
+                if (larrCoords) {
+                    lstrMessage += "\nCoordinates: " + larrCoords.toString();
+                }
+                
+                if (this.Stack) {
+                    lstrMessage += "\nStack: [" + this.Stack.join("], [") + "]";
+                }
+                
+                if (this.JunctionStack) {
+                    lstrMessage += "\nJunction Stack: [" + this.JunctionStack.join("], [") + "]";
+                }
+                
+                console.log(ex.toString() + lstrMessage);
+                break;
             }
         }
         

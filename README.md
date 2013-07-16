@@ -39,7 +39,7 @@ lobjMaze.Generate();
 
 To use a WallMap helper object create a new WallMap passing in a string representing the maze (currently padded with \n on first and last lines)
 ```javascript
-var lobjWalls = new WallMap(lobjMaze.Display());
+var lobjWalls = new WallMap(lobjMaze.DisplayString());
 ```
 
 

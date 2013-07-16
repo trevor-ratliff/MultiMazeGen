@@ -294,8 +294,8 @@ function WallMap (vstrMaze) {
 /// @endverbatim
 //====
 function MazeMap (vintRows, vintColumns) {
-    this.Columns = typeof vintColumns !== 'number' ? 10 : Math.floor((vintColumns - 1)/2);
-    this.Rows = typeof vintRows !== 'number' ? 5 : Math.floor((vintRows-1)/2);
+    this.Columns = typeof vintColumns !== 'number' ? 10 : Math.floor(vintColumns);  //Math.floor((vintColumns - 1)/2);
+    this.Rows = typeof vintRows !== 'number' ? 5 : Math.floor(vintRows);    //Math.floor((vintRows-1)/2);
     this.TotalCells = this.Columns * this.Rows;     //vintColumns * vintRows;   //(vintColumns + 1) * (vintRows + 1);
     this.VisitedCells = 0;
     this.BackTrackPercent = arguments.length > 2 ? 
@@ -397,7 +397,7 @@ function MazeMap (vintRows, vintColumns) {
     
     
     //====
-    /// @fn Display()
+    /// @fn DisplayString()
     /// @brief generates a string to represent the map
     /// @author Trevor Ratliff
     /// @date 2013-06-12
@@ -415,7 +415,7 @@ function MazeMap (vintRows, vintColumns) {
     ///         function creation  |
     /// @endverbatim
     //====
-    this.Display = function () {
+    this.DisplayString = function () {
         var lstrLine1 = "";
         var lstrLine2 = "";
         var lstrMaze = "";
@@ -533,6 +533,37 @@ function MazeMap (vintRows, vintColumns) {
         }
         
         return this;
+    };
+    
+    
+    //====
+    /// @fn GetCell(vintRow, vintColumn)
+    /// @brief Gets the MazeCell at the specified location
+    /// @author Trevor Ratliff
+    /// @date 2013-07-16
+    /// @param vintRow -- the row of the cell to retrieve
+    /// @param vintColumn -- the column of the cell to retrieve
+    /// @return MazeCell
+    //  
+    //  Definitions:
+    //      lobjCell -- MazeCell to return
+    //  
+    /// @verbatim
+    /// History:  Date  |  Programmer  |  Contact  |  Description  |
+    ///     2013-07-16  |  Trevor Ratliff  |  trevor.w.ratliff@gmail.com  |  
+    ///         function creation  |
+    /// @endverbatim
+    //====
+    this.GetCell = function (vintRow, vintColumn) {
+        var lobjCell = null;
+        
+        if (this.Map.length > vintRow) {
+            if (this.Map[vintRow].length > vintColumn) {
+                lobjCell = this.Map[lintRow][lintColumn];
+            }
+        }
+        
+        return lobjCell;
     };
     
     

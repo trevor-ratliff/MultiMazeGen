@@ -1,5 +1,20 @@
-Crafty.scene('Game', function() {
+//====
+/// @file scene.js
+/// @brief modifed from tutorial files from http://buildnewgames.com/introduction-to-crafty/
+/// @author Trevor Ratliff
+/// @date 2013-06-07
+//
+/// @verbatim
+/// History:  Date  |  Programmer  |  Contact  |  Description  |
+///     2013-06-07  |  Trevor Ratliff  |  trevor.w.ratliff@gmail.com  |  
+///         file creation  |
+/// @endverbatim
+//====
 
+// Game scene
+//-----------
+// Handles the game set up
+Crafty.scene('Game', function() {
   // A 2D array to keep track of all occupied tiles
   this.occupied = new Array(Game.map_grid.width);
   for (var i = 0; i < Game.map_grid.width; i++) {
@@ -12,18 +27,19 @@ Crafty.scene('Game', function() {
   //----
   // generate maze object
   //----
-  //~ var lobjMaze = new MazeMap(Math.floor((Game.map_grid.height-1)/2), 
-    //~ Math.floor((Game.map_grid.width-1)/2));
-  var lobjMaze = new MazeMap(Game.map_grid.height, Game.map_grid.width);
+  var lobjMaze = new MazeMap(
+    Math.floor((Game.map_grid.height-1)/2), 
+    Math.floor((Game.map_grid.width-1)/2)
+  );
   
   lobjMaze.Init();
   lobjMaze.Generate();
-  console.log(lobjMaze.Display());
+  console.log(lobjMaze.DisplayString());
   
   //----
   // get wall map for maze
   //----
-  var lobjWalls = new WallMap(lobjMaze.Display());
+  var lobjWalls = new WallMap(lobjMaze.DisplayString());
 
   // Player character, placed at 1, 1 on our grid
   this.player = Crafty.e('PlayerCharacter').at(1, 1);
@@ -32,17 +48,6 @@ Crafty.scene('Game', function() {
   // Place a tree at every edge square on our grid of 16x16 tiles
   for (var x = 0; x < Game.map_grid.width; x++) {
     for (var y = 0; y < Game.map_grid.height; y++) {
-      //~ var at_edge = x == 0 || x == Game.map_grid.width - 1 || y == 0 || y == Game.map_grid.height - 1;
-
-      //~ if (at_edge && lobjWalls.IsBorder(y,x)) {
-        //~ // Place a tree entity at the current tile
-        //~ Crafty.e('Tree').at(x, y);
-        //~ this.occupied[x][y] = true;
-      //~ } else if (lobjWalls.IsWall(y,x)) {    //(Math.random() < 0.06 && !this.occupied[x][y]) {
-        //~ // Place a bush entity at the current tile
-        //~ Crafty.e('Bush').at(x, y);
-        //~ this.occupied[x][y] = true;
-      //~ }
       if (lobjWalls.IsWall(y,x)) {    //(Math.random() < 0.06 && !this.occupied[x][y]) {
         // Place a bush entity at the current tile
         Crafty.e('Bush').at(x, y);
@@ -79,22 +84,9 @@ Crafty.scene('Game', function() {
 });
 
 
-//====
-/// @fn 
-/// @brief 
-/// @author Trevor Ratliff
-/// @date 
-/// @param 
-/// @return 
-//  
-//  Definitions:
-//  
-/// @verbatim
-/// History:  Date  |  Programmer  |  Contact  |  Description  |
-///     _  |  Trevor Ratliff  |  trevor.w.ratliff@gmail.com  |  
-///         function creation  |
-/// @endverbatim
-//====
+// Victory scene
+//--------------
+// Handles winning of the 'game'
 Crafty.scene('Victory', function() {
   Crafty.e('2D, DOM, Text')
     .attr({ x: Game.width()/2 - 96, 
@@ -121,18 +113,6 @@ Crafty.scene('Loading', function(){
     .attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
     .css($text_css);
   
-  //~ //----
-  //~ // load a sprite by 'Blazing Magpie'
-  //~ //----
-  //~ Crafty.load(['assets/BlazingMagpieBase_mod.png'], function(){
-    //~ // Once the image is loaded...
- 
-    //~ // Define the individual sprites in the image
-    //~ Crafty.sprite(32, 48, 'assets/BlazingMagpieBase_mod.png', {
-      //~ spr_player:  [0, 0]
-    //~ });
-  //~ });
-  
   // Load our sprite map image
   // image retrieved from: http://opengameart.org/content/tiny-16-basic
   //    artist: Lanea Zimmerman
@@ -154,16 +134,4 @@ Crafty.scene('Loading', function(){
     // Now that our sprites are ready to draw, start the game
     Crafty.scene('Game');
   });
-  
-  //~ Crafty.load(['assets/LaneaZimmerman/BasicTiles16x16.png'], function(){
-    //~ // Once the image is loaded...
- 
-    //~ // Define the individual sprites in the image
-    //~ Crafty.sprite(16, 'assets/LaneaZimmerman/BasicTiles16x16.png', {
-      //~ spr_tree:    [6, 3],
-      //~ spr_bush:    [4, 2],
-      //~ spr_treasure: [4, 4],
-      //~ spr_player:  [0, 8]
-    //~ });
-  //~ });
 });

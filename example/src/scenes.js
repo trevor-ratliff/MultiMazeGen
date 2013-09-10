@@ -1,20 +1,8 @@
-//====
-/// @file scene.js
-/// @brief modifed from tutorial files from http://buildnewgames.com/introduction-to-crafty/
-/// @author Trevor Ratliff
-/// @date 2013-06-07
-//
-/// @verbatim
-/// History:  Date  |  Programmer  |  Contact  |  Description  |
-///     2013-06-07  |  Trevor Ratliff  |  trevor.w.ratliff@gmail.com  |  
-///         file creation  |
-/// @endverbatim
-//====
-
 // Game scene
 //-----------
-// Handles the game set up
+// handles action of the game
 Crafty.scene('Game', function() {
+
   // A 2D array to keep track of all occupied tiles
   this.occupied = new Array(Game.map_grid.width);
   for (var i = 0; i < Game.map_grid.width; i++) {
@@ -27,14 +15,13 @@ Crafty.scene('Game', function() {
   //----
   // generate maze object
   //----
-  var lobjMaze = new MazeMap(
-    Math.floor((Game.map_grid.height-1)/2), 
-    Math.floor((Game.map_grid.width-1)/2)
-  );
+  var lobjMaze = new MazeMap(Math.floor((Game.map_grid.height-1)/2), 
+    Math.floor((Game.map_grid.width-1)/2));
+  //~ var lobjMaze = new MazeMap(Game.map_grid.height, Game.map_grid.width);
   
   lobjMaze.Init();
   lobjMaze.Generate();
-  console.log(lobjMaze.DisplayString());
+  if (typeof console != "undefined") console.log(lobjMaze.DisplayString());
   
   //----
   // get wall map for maze
@@ -48,7 +35,7 @@ Crafty.scene('Game', function() {
   // Place a tree at every edge square on our grid of 16x16 tiles
   for (var x = 0; x < Game.map_grid.width; x++) {
     for (var y = 0; y < Game.map_grid.height; y++) {
-      if (lobjWalls.IsWall(y,x)) {    //(Math.random() < 0.06 && !this.occupied[x][y]) {
+      if (lobjWalls.IsWall(y,x)) {
         // Place a bush entity at the current tile
         Crafty.e('Bush').at(x, y);
         this.occupied[x][y] = true;
@@ -86,7 +73,7 @@ Crafty.scene('Game', function() {
 
 // Victory scene
 //--------------
-// Handles winning of the 'game'
+// handles the game end actions
 Crafty.scene('Victory', function() {
   Crafty.e('2D, DOM, Text')
     .attr({ x: Game.width()/2 - 96, 
@@ -116,7 +103,7 @@ Crafty.scene('Loading', function(){
   // Load our sprite map image
   // image retrieved from: http://opengameart.org/content/tiny-16-basic
   //    artist: Lanea Zimmerman
-  Crafty.load(['assets/LaneaZimmerman/BasicTiles32x32a.png'], function(){
+  Crafty.load(['assets/LaneaZimmerman/BasicTiles32x32a.png'/*, 'another_image'*/], function(){
     // Once the image is loaded...
  
     // Define the individual sprites in the image
@@ -133,5 +120,5 @@ Crafty.scene('Loading', function(){
  
     // Now that our sprites are ready to draw, start the game
     Crafty.scene('Game');
-  });
+  });  
 });

@@ -1,16 +1,3 @@
-//====
-/// @file components.js
-/// @brief modifed from tutorial files from http://buildnewgames.com/introduction-to-crafty/
-/// @author Trevor Ratliff
-/// @date 2013-06-07
-//
-/// @verbatim
-/// History:  Date  |  Programmer  |  Contact  |  Description  |
-///     2013-06-07  |  Trevor Ratliff  |  trevor.w.ratliff@gmail.com  |  
-///         file creation  |
-/// @endverbatim
-//====
-
 // The Grid component allows an element to be located
 //  on a grid of tiles
 Crafty.c('Grid', {
@@ -95,7 +82,14 @@ Crafty.c('PlayerCharacter', {
     return this;
   },
 
-  // Stops the movement (from comments)
+  // Stops the movement
+  //~ stopMovement: function() {
+    //~ this._speed = 0;
+    //~ if (this._movement) {
+      //~ this.x -= this._movement.x;
+      //~ this.y -= this._movement.y;
+    //~ }
+  //~ },
   stopMovement: function () {
     if (this._movement) {
       this.x -= this._movement.x;

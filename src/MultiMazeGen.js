@@ -8,6 +8,8 @@
 /// History:  Date  |  Programmer  |  Contact  |  Description  |
 ///     2013-06-12  |  Trevor Ratliff  |  trevor.w.ratliff@gmail.com  |  
 ///         file creation  |
+///     2013-09-10  |  Trevor Ratliff  |  trevor.w.ratliff@gmail.com  |
+///         added error trapping  |
 /// @endverbatim
 //====
 
@@ -67,23 +69,27 @@ function BitMapping () {
     /// @endverbatim
     //====
     this.Swap = function (vstrDirection) {
-        switch (vstrDirection) {
-            case 'N':
-            case 'n':
-                this.N = this.N == true ? false : true;
-                break;
-            case 'E':
-            case 'e':
-                this.E = this.E == true ? false : true;
-                break;
-            case 'W':
-            case 'w':
-                this.W = this.W == true ? false : true;
-                break;
-            case 'S':
-            case 's':
-                this.S = this.S == true ? false : true;
-                break;
+        try {
+            switch (vstrDirection) {
+                case 'N':
+                case 'n':
+                    this.N = this.N == true ? false : true;
+                    break;
+                case 'E':
+                case 'e':
+                    this.E = this.E == true ? false : true;
+                    break;
+                case 'W':
+                case 'w':
+                    this.W = this.W == true ? false : true;
+                    break;
+                case 'S':
+                case 's':
+                    this.S = this.S == true ? false : true;
+                    break;
+            }
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
         }
     };
     
@@ -106,13 +112,18 @@ function BitMapping () {
     this.toString = function () {
         var lstrReturn = "";
         
-        //----
-        // add data
-        //----
-        lstrReturn += "[N:" + (this.N == true ? 1 : 0) + ", " +
-            "E:" + (this.E == true ? 1 : 0) + ", " +
-            "W:" + (this.W == true ? 1 : 0) + ", " +
-            "S:" + (this.S == true ? 1 : 0) + "]";
+        try {
+            //----
+            // add data
+            //----
+            lstrReturn += "[N:" + (this.N == true ? 1 : 0) + ", " +
+                "E:" + (this.E == true ? 1 : 0) + ", " +
+                "W:" + (this.W == true ? 1 : 0) + ", " +
+                "S:" + (this.S == true ? 1 : 0) + "]";
+            
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
+        }
         
         return lstrReturn;
     };
@@ -179,30 +190,35 @@ function MazeCell (vintRow, vintColumn) {
     this.toString = function () {
         var lstrReturn = "";
         
-        //----
-        // add coordinates
-        //----
-        lstrReturn += "row: " + this._row + ", column: " + this._column + "\n";
-        
-        //----
-        // add borders
-        //----
-        lstrReturn += "Borders:   " + this.Borders.toString() + "\n";
-        
-        //----
-        // add walls
-        //----
-        lstrReturn += "Walls:     " + this.Walls.toString() + "\n";
-        
-        //----
-        // add solution
-        //----
-        lstrReturn += "Solution:  " + this.Solution.toString() + "\n";
-        
-        //----
-        // add backtrack
-        //----
-        lstrReturn += "BackTrack: " + this.BackTrack.toString();
+        try {
+            //----
+            // add coordinates
+            //----
+            lstrReturn += "row: " + this._row + ", column: " + this._column + "\n";
+            
+            //----
+            // add borders
+            //----
+            lstrReturn += "Borders:   " + this.Borders.toString() + "\n";
+            
+            //----
+            // add walls
+            //----
+            lstrReturn += "Walls:     " + this.Walls.toString() + "\n";
+            
+            //----
+            // add solution
+            //----
+            lstrReturn += "Solution:  " + this.Solution.toString() + "\n";
+            
+            //----
+            // add backtrack
+            //----
+            lstrReturn += "BackTrack: " + this.BackTrack.toString();
+            
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
+        }
         
         //----
         // return lstrReturn
@@ -240,24 +256,32 @@ function WallMap (vstrMaze) {
     this._arrWalls.pop();
     
     this.IsWall = function (vintRow, vintColumn) {
-        var lblnReturn = false;
-        var lstrChar = typeof this._arrWalls[vintRow] != "undefined" ? 
-            this._arrWalls[vintRow].substr(vintColumn, 1) : "";
-        
-        if (lstrChar == "#") {
-            lblnReturn = true;
+        try {
+            var lblnReturn = false;
+            var lstrChar = typeof this._arrWalls[vintRow] != "undefined" ? 
+                this._arrWalls[vintRow].substr(vintColumn, 1) : "";
+            
+            if (lstrChar == "#") {
+                lblnReturn = true;
+            }
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
         }
         
         return lblnReturn;
     };
     
     this.IsBorder = function (vintRow, vintColumn) {
-        var lblnReturn = false;
-        var lstrChar = typeof this._arrWalls[vintRow] != "undefined" ? 
-            this._arrWalls[vintRow].substr(vintColumn, 1) : "";
-        
-        if (lstrChar == "@") {
-            lblnReturn = true;
+        try {
+            var lblnReturn = false;
+            var lstrChar = typeof this._arrWalls[vintRow] != "undefined" ? 
+                this._arrWalls[vintRow].substr(vintColumn, 1) : "";
+            
+            if (lstrChar == "@") {
+                lblnReturn = true;
+            }
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
         }
         
         return lblnReturn;
@@ -329,67 +353,71 @@ function MazeMap (vintRows, vintColumns) {
     /// @endverbatim
     //====
     this.Init = function (robjOptions) {
-        //----
-        // set options
-        //----
-        robjOptions = typeof robjOptions !== "object" ? {} : robjOptions;
-        var lblnWalls = typeof robjOptions.Walls !== "undefined" ? 
-            robjOptions.Walls : true;
-        this.Algorithm = typeof robjOptions.Algorithm !== "undefined" ? 
-            robjOptions.Algorithm : "RecursiveBackTracker";
-        
-        //----
-        // clear stacks
-        //----
-        this.Stack = [];
-        this.JunctionStack = [];
-        
-        //----
-        // loop through rows
-        //----
-        for (var lintII = 0; lintII < this.Rows; lintII++) {
-            //---
-            // create array for columns
-            //---
-            this.Map[lintII] = [];
+        try {
+            //----
+            // set options
+            //----
+            robjOptions = typeof robjOptions !== "object" ? {} : robjOptions;
+            var lblnWalls = typeof robjOptions.Walls !== "undefined" ? 
+                robjOptions.Walls : true;
+            this.Algorithm = typeof robjOptions.Algorithm !== "undefined" ? 
+                robjOptions.Algorithm : "RecursiveBackTracker";
             
             //----
-            // loop through columns
+            // clear stacks
             //----
-            for (var lintNN = 0; lintNN < this.Columns; lintNN++) {
-                //----
-                // add this coordinate to this.CellCoords
-                //----
-                this.CellCoords.push([lintII,lintNN]);
+            this.Stack = [];
+            this.JunctionStack = [];
+            
+            //----
+            // loop through rows
+            //----
+            for (var lintII = 0; lintII < this.Rows; lintII++) {
+                //---
+                // create array for columns
+                //---
+                this.Map[lintII] = [];
                 
                 //----
-                // create a new maze cell at this coordinate
+                // loop through columns
                 //----
-                if (lblnWalls) {
-                    this.Map[lintII][lintNN] = new MazeCell(lintII, lintNN, true);
-                } else {
-                    this.Map[lintII][lintNN] = new MazeCell(lintII, lintNN);
-                }
-                
-                //----
-                // set borders
-                //----
-                if (lintII == 0) {
-                    this.Map[lintII][lintNN].Borders.N = true;
-                }
-                
-                if (lintNN == this.Columns-1) {
-                    this.Map[lintII][lintNN].Borders.E = true;
-                }
-                
-                if (lintNN == 0) {
-                    this.Map[lintII][lintNN].Borders.W = true;
-                }
-                
-                if (lintII == this.Rows-1) {
-                    this.Map[lintII][lintNN].Borders.S = true;
+                for (var lintNN = 0; lintNN < this.Columns; lintNN++) {
+                    //----
+                    // add this coordinate to this.CellCoords
+                    //----
+                    this.CellCoords.push([lintII,lintNN]);
+                    
+                    //----
+                    // create a new maze cell at this coordinate
+                    //----
+                    if (lblnWalls) {
+                        this.Map[lintII][lintNN] = new MazeCell(lintII, lintNN, true);
+                    } else {
+                        this.Map[lintII][lintNN] = new MazeCell(lintII, lintNN);
+                    }
+                    
+                    //----
+                    // set borders
+                    //----
+                    if (lintII == 0) {
+                        this.Map[lintII][lintNN].Borders.N = true;
+                    }
+                    
+                    if (lintNN == this.Columns-1) {
+                        this.Map[lintII][lintNN].Borders.E = true;
+                    }
+                    
+                    if (lintNN == 0) {
+                        this.Map[lintII][lintNN].Borders.W = true;
+                    }
+                    
+                    if (lintII == this.Rows-1) {
+                        this.Map[lintII][lintNN].Borders.S = true;
+                    }
                 }
             }
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
         }
         
         return this;
@@ -420,86 +448,92 @@ function MazeMap (vintRows, vintColumns) {
         var lstrLine2 = "";
         var lstrMaze = "";
         
-        //----
-        // generate first row of text
-        //----
-        lstrLine1 = "\n@";
-        for (var lintNN = 0; lintNN < this.Columns; lintNN ++) {
+        try {
             //----
-            // test for borders or walls
+            // generate first row of text
             //----
-            if (this.Map[0][lintNN].Borders.N ||
-                this.Map[0][lintNN].Walls.N) 
-            {
-                lstrLine1 += this.Map[0][lintNN].Borders.N ? "@@" : "##";
-            } else {
-                lstrLine1 += " #";
-            }
-        }
-        
-        //----
-        // append rows to lstrMaze
-        //----
-        lstrMaze += lstrLine1 + "\n";
-        
-        //----
-        // loop through rows of maze
-        //----
-        for (var lintII = 0; lintII < this.Rows; lintII++) {
-            lstrLine1 = "";
-            lstrLine2 = "@";
-            
-            //----
-            // test for borders or walls on west side
-            //----
-            if (this.Map[lintII][0].Borders.W ||
-                this.Map[lintII][0].Walls.W) 
-            {
-                lstrLine1 += this.Map[lintII][0].Borders.W ? "@" : "#";
-            } else {
-                lstrLine1 += " ";
-            }
-            
-            //----
-            // loop through columns
-            //----
-            for (var lintNN = 0; lintNN < this.Columns; lintNN++) {
+            lstrLine1 = "\n@";
+            for (var lintNN = 0; lintNN < this.Columns; lintNN ++) {
                 //----
-                // generate next 2 lines
+                // test for borders or walls
                 //----
-                // test for borders or walls on east side making cell space too
-                //----
-                if (this.Map[lintII][lintNN].Borders.E ||
-                    this.Map[lintII][lintNN].Walls.E) 
+                if (this.Map[0][lintNN].Borders.N ||
+                    this.Map[0][lintNN].Walls.N) 
                 {
-                    lstrLine1 += this.Map[lintII][lintNN].Borders.E ? " @" : " #";
+                    lstrLine1 += this.Map[0][lintNN].Borders.N ? "@@" : "##";
                 } else {
-                    lstrLine1 += "  ";
-                }
-                
-                //----
-                // test for borders or walls on the south side
-                //----
-                if (this.Map[lintII][lintNN].Borders.S ||
-                    this.Map[lintII][lintNN].Walls.S) 
-                {
-                    lstrLine2 += this.Map[lintII][lintNN].Borders.S ? "@@" : 
-                        lintNN == this.Columns-1 ? "#@" : "##";
-                } else {
-                    lstrLine2 += lintNN == this.Columns-1 ? " @" : " #";
+                    lstrLine1 += " #";
                 }
             }
             
             //----
             // append rows to lstrMaze
             //----
-            lstrMaze += lstrLine1 + "\n" + lstrLine2 + "\n";
+            lstrMaze += lstrLine1 + "\n";
+            
+            //----
+            // loop through rows of maze
+            //----
+            for (var lintII = 0; lintII < this.Rows; lintII++) {
+                lstrLine1 = "";
+                lstrLine2 = "@";
+                
+                //----
+                // test for borders or walls on west side
+                //----
+                if (this.Map[lintII][0].Borders.W ||
+                    this.Map[lintII][0].Walls.W) 
+                {
+                    lstrLine1 += this.Map[lintII][0].Borders.W ? "@" : "#";
+                } else {
+                    lstrLine1 += " ";
+                }
+                
+                //----
+                // loop through columns
+                //----
+                for (var lintNN = 0; lintNN < this.Columns; lintNN++) {
+                    //----
+                    // generate next 2 lines
+                    //----
+                    // test for borders or walls on east side making cell space too
+                    //----
+                    if (this.Map[lintII][lintNN].Borders.E ||
+                        this.Map[lintII][lintNN].Walls.E) 
+                    {
+                        lstrLine1 += this.Map[lintII][lintNN].Borders.E ? " @" : " #";
+                    } else {
+                        lstrLine1 += "  ";
+                    }
+                    
+                    //----
+                    // test for borders or walls on the south side
+                    //----
+                    if (this.Map[lintII][lintNN].Borders.S ||
+                        this.Map[lintII][lintNN].Walls.S) 
+                    {
+                        lstrLine2 += this.Map[lintII][lintNN].Borders.S ? "@@" : 
+                            lintNN == this.Columns-1 ? "#@" : "##";
+                    } else {
+                        lstrLine2 += lintNN == this.Columns-1 ? " @" : " #";
+                    }
+                }
+                
+                //----
+                // append rows to lstrMaze
+                //----
+                lstrMaze += lstrLine1 + "\n" + lstrLine2 + "\n";
+            }
+            
+            //----
+            // return maze representation
+            //----
+            this.MazeString = lstrMaze;
+            
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
         }
         
-        //----
-        // return maze representation
-        //----
-        this.MazeString = lstrMaze;
         return lstrMaze;
     };
     
@@ -520,16 +554,20 @@ function MazeMap (vintRows, vintColumns) {
     /// @endverbatim
     //====
     this.Generate = function () {
-        //----
-        // switch what to do based on this.Algorithm
-        //----
-        switch (this.Algorithm) {
-            case "RecursiveDivision":
-                this.RecursiveDivision();
-                break;
-            default:
-                this.RecursiveBackTracker();
-                break;
+        try {
+            //----
+            // switch what to do based on this.Algorithm
+            //----
+            switch (this.Algorithm) {
+                case "RecursiveDivision":
+                    this.RecursiveDivision();
+                    break;
+                default:
+                    this.RecursiveBackTracker();
+                    break;
+            }
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
         }
         
         return this;
@@ -557,10 +595,14 @@ function MazeMap (vintRows, vintColumns) {
     this.GetCell = function (vintRow, vintColumn) {
         var lobjCell = null;
         
-        if (this.Map.length > vintRow) {
-            if (this.Map[vintRow].length > vintColumn) {
-                lobjCell = this.Map[lintRow][lintColumn];
+        try {
+            if (this.Map.length > vintRow) {
+                if (this.Map[vintRow].length > vintColumn) {
+                    lobjCell = this.Map[lintRow][lintColumn];
+                }
             }
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
         }
         
         return lobjCell;
@@ -593,7 +635,7 @@ function MazeMap (vintRows, vintColumns) {
         //----
         while (this.VisitedCells < this.TotalCells) {
             try {
-                //~ console.log("row: " + lintRow + ", column: " + lintColumn);
+                //~ if (typeof console != "undefined") console.log("row: " + lintRow + ", column: " + lintColumn);
                 var lintRandom = 0;
                 var lmcCurrent = this.Map[lintRow][lintColumn];
                 var lmcNext = null;
@@ -661,7 +703,7 @@ function MazeMap (vintRows, vintColumns) {
                     try {
                         lmcNext = larrNeighbors[lintRandom];
                     } catch (ex) {
-                        console.log(ex.toString());
+                        if (typeof console != "undefined") console.log(ex.toString());
                     }
                     
                     //----
@@ -786,7 +828,7 @@ function MazeMap (vintRows, vintColumns) {
                     lstrMessage += "\nJunction Stack: [" + this.JunctionStack.join("], [") + "]";
                 }
                 
-                console.log(ex.toString() + lstrMessage);
+                if (typeof console != "undefined") console.log(ex.toString() + lstrMessage);
                 break;
             }
         }
@@ -814,35 +856,39 @@ function MazeMap (vintRows, vintColumns) {
         var lintColumn = 0;
         var lintRow = 0;
         
-        for (var lintII = 0; lintII < 5; lintII++) {
-            lintColumn = Math.floor(Math.random() * this.Columns);
-            lintRow = Math.floor(Math.random() * this.Rows);
-            
-            switch (Math.floor(Math.random() * 4)) {
-                case 1:
-                    this.Map[lintRow][lintColumn].Walls.N = true;
-                    if (lintRow > 0) 
-                        this.Map[lintRow-1][lintColumn].Walls.S = true;
-                    break;
+        try {
+            for (var lintII = 0; lintII < 5; lintII++) {
+                lintColumn = Math.floor(Math.random() * this.Columns);
+                lintRow = Math.floor(Math.random() * this.Rows);
                 
-                case 2:
-                    this.Map[lintRow][lintColumn].Walls.E = true;
-                    if (lintColumn < this.Columns) 
-                        this.Map[lintRow][lintColumn+1].Walls.W = true;
-                    break;
-                
-                case 2:
-                    this.Map[lintRow][lintColumn].Walls.W = true;
-                    if (lintColumn > 0) 
-                        this.Map[lintRow][lintColumn-1].Walls.E = true;
-                    break;
-                
-                default:
-                    this.Map[lintRow][lintColumn].Walls.S = true;
-                    if (lintRow < this.Rows) 
-                        this.Map[lintRow+1][lintColumn].Walls.N = true;
-                    break;
+                switch (Math.floor(Math.random() * 4)) {
+                    case 1:
+                        this.Map[lintRow][lintColumn].Walls.N = true;
+                        if (lintRow > 0) 
+                            this.Map[lintRow-1][lintColumn].Walls.S = true;
+                        break;
+                    
+                    case 2:
+                        this.Map[lintRow][lintColumn].Walls.E = true;
+                        if (lintColumn < this.Columns) 
+                            this.Map[lintRow][lintColumn+1].Walls.W = true;
+                        break;
+                    
+                    case 3:
+                        this.Map[lintRow][lintColumn].Walls.W = true;
+                        if (lintColumn > 0) 
+                            this.Map[lintRow][lintColumn-1].Walls.E = true;
+                        break;
+                    
+                    default:
+                        this.Map[lintRow][lintColumn].Walls.S = true;
+                        if (lintRow < this.Rows) 
+                            this.Map[lintRow+1][lintColumn].Walls.N = true;
+                        break;
+                }
             }
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
         }
         
         return this;

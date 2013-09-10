@@ -4,12 +4,25 @@
   <!-- followed tutorial at http://buildnewgames.com/introduction-to-crafty/ -->
   <script src="lib/crafty.js"></script>
   <script src="lib/seedrandom.js"></script>
+  <!-- <script src="lib/MultiMazeGen.js"></script> -->
   <script src="lib/MultiMazeGen_min.js"></script>
   <script src="src/game.js"></script>
   <script src="src/components.js"></script>
   <script src="src/scenes.js"></script>
   <script>
-    window.addEventListener('load', Game.start);
+    if (window.addEventListener) {
+        window.addEventListener('load', Game.start);
+    } else if (window.attachEvent) {
+        //----
+        // add to ie < 9
+        //----
+        window.attachEvent('onload', Game.start);
+    } else {
+        //----
+        // die miserably
+        //----
+        alert("Your browser needs to be updated to use this page.");
+    }
   </script>
   <style type="text/css" media="screen">
     body {
@@ -31,12 +44,18 @@
     #cr-stage div[class*="Text"] {
       font-size: 3em;
     }
+    
+    #no-go {
+      color: #e0e0e0;
+    }
   </style>
 </head>
 <body>
-<div id="cr-stage"></div>
-<p>
-Followed tutorial from <a href="http://buildnewgames.com/introduction-to-crafty/">BuildNewGames.com</a>
-</p>
+    <noscript>You need to have JavaScript turned on to use this page!</noscript>
+    <div id="no-go">Your browser needs to be updated to use this page.</div>
+    <div id="cr-stage"></div>
+    <p>
+    Followed tutorial from <a href="http://buildnewgames.com/introduction-to-crafty/">BuildNewGames.com</a>
+    </p>
 </body>
 </html>

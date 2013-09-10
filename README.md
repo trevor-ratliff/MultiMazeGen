@@ -47,3 +47,11 @@ Then you can check for walls by calling IsWall on the WallMap object
 ```javascript
 if ( lobjWalls.IsWall([row],[column]) ) /* process wall */;
 ```
+
+
+Minimized With
+--------------
+
+```
+java -jar c:\Programs\closure\compiler.jar .\MultiMazeGen.js > .\MultiMazeGen_min.js
+```

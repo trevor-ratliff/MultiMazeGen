@@ -27,12 +27,13 @@
   <style type="text/css" media="screen">
     body {
       background: black;
+      color: #e0e0e0;
       font-family: verdana;
       text-align: center;
     }
     
-    p, p>a {
-        color: #e0e0e0;
+    p>a {
+      color: #e0e0e0;
     }
     
     #cr-stage {
@@ -45,17 +46,28 @@
       font-size: 3em;
     }
     
-    #no-go {
-      color: #e0e0e0;
+    #info {
+      float: left;
+      text-align: left;
     }
   </style>
 </head>
 <body>
-    <noscript>You need to have JavaScript turned on to use this page!</noscript>
-    <div id="no-go">Your browser needs to be updated to use this page.</div>
-    <div id="cr-stage"></div>
-    <p>
+  <noscript>You need to have JavaScript turned on to use this page!</noscript>
+  <div id="no-go">Your browser needs to be updated to use this page.</div>
+  <div id="info">
+    <div id="highScore">
+      <label for="txtHighScore">Fastest Time:</label>
+      <span id="txtHighScore"></span>
+    </div><br />
+    <div id="currentScore">
+      <label for="txtCurrentScore">Current Time:</label>
+      <span id="txtCurrentScore"></span>
+    </div>
+  </div>
+  <div id="cr-stage"></div>
+  <p>
     Followed tutorial from <a href="http://buildnewgames.com/introduction-to-crafty/">BuildNewGames.com</a>
-    </p>
+  </p>
 </body>
 </html>

@@ -32,7 +32,7 @@ Crafty.scene('Game', function() {
   this.player = Crafty.e('PlayerCharacter').at(1, 1);
   this.occupied[this.player.at().x][this.player.at().y] = true;
 
-  // Place a tree at every edge square on our grid of 16x16 tiles
+  // Place a tree at every edge square on our grid of tiles
   for (var x = 0; x < Game.map_grid.width; x++) {
     for (var y = 0; y < Game.map_grid.height; y++) {
       if (lobjWalls.IsWall(y,x)) {
@@ -47,7 +47,7 @@ Crafty.scene('Game', function() {
     }
   }
 
-  // Generate up to 10 treasures on the map in random locations
+  // Generate up to max_treasures on the map in random locations
   var max_treasures = 5;
   while (Crafty('Treasure').length < max_treasures) {
     for (var x = 1; x < Game.map_grid.width-1; x++) {
@@ -84,6 +84,43 @@ Crafty.scene('Victory', function() {
   this.restart_game = this.bind('KeyDown', function() {
     Crafty.scene('Game');
   });
+  
+  //----
+  // set time, score etc
+  //----
+  if (gdteTime != null) {
+    var ldteTime = new Date();
+    var lintTimeDiff = (ldteTime - gdteTime)/1000;
+    
+    //----
+    // test for local storage
+    //----
+    if (typeof localStorage == 'object') {
+      var lblnHasHighScore = false;
+      var lintHighScore = 1000000;
+      var lobjHighScore = document.getElementById('txtHighScore');
+      var lobjCurrentScore = document.getElementById('txtCurrentScore');
+      
+      if (typeof localStorage.dvr_checker_high_score != 'undefined') {
+        lintHighScore = parseInt(localStorage.dvr_checker_high_score);
+        lblnHasHighScore = true
+      }
+      
+      //----
+      // check to see if this is the best time
+      //----
+      if (lintTimeDiff < lintHighScore) {
+        localStorage.setItem('dvr_checker_high_score', lintTimeDiff);
+        alert("You've achieved a new high score!\n\n" + lintTimeDiff);
+        lobjHighScore.innerHTML = lintTimeDiff;
+      }
+      
+      //----
+      // display 0 for current score
+      //----
+      lobjCurrentScore.innerHTML = '0';
+    }
+  }
 }, function() {
   this.unbind('KeyDown', this.restart_game);
 });

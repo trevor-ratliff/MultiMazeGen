@@ -32,7 +32,21 @@ Game = {
       // remove the no-go element
       //----
       lobjNoGo.parentElement.removeChild(lobjNoGo);
-    
+      
+      //----
+      // display high score
+      //----
+      var lobjHighScore = document.getElementById('txtHighScore');
+      if (typeof localStorage != 'undefined') {
+        lobjHighScore.innerHTML = localStorage.dvr_checker_high_score;
+      }
+      
+      //----
+      // display 0 for current score
+      //----
+      var lobjCurrentScore = document.getElementById('txtCurrentScore');
+      lobjCurrentScore.innerHTML = '0';
+      
       // Start crafty and set a background color so that we can see it's working
       Crafty.init(Game.width(), Game.height());
       //Crafty.background('rgb(249, 223, 125)');
@@ -47,3 +61,4 @@ Game = {
 }
 
 $text_css = { 'font-size': '24px', 'font-family': 'verdana', 'color': 'white', 'text-align': 'center' };
+var gdteTime = null;

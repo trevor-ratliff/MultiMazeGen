@@ -60,6 +60,25 @@ Crafty.c('PlayerCharacter', {
     // switch animations with direction
     var animation_speed = 8;
     this.bind('NewDirection', function(data) {
+      //----
+      // set start time
+      //----
+      if (gdteTime == null) {
+        gdteTime = new Date();
+      }
+      
+      //----
+      // set time, score etc
+      //----
+      if (gdteTime != null) {
+        var ldteTime = new Date();
+        var lintTimeDiff = (ldteTime - gdteTime)/1000;
+        document.getElementById('txtCurrentScore').innerHTML = lintTimeDiff;
+      }
+      
+      //----
+      // move player
+      //----
       if (data.x > 0) {
         this.animate('PlayerMovingRight', animation_speed, -1);
       } else if (data.x < 0) {

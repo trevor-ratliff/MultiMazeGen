@@ -75,11 +75,7 @@ Crafty.scene('Game', function() {
 //--------------
 // handles the game end actions
 Crafty.scene('Victory', function() {
-  Crafty.e('2D, DOM, Text')
-    .attr({ x: Game.width()/2 - 96, 
-      y: Game.height()/2 - 36})
-    .textFont({size: '40px', weight: 'bold'})
-    .text('Victory!');
+  var lstrHighScore = '';
 
   this.restart_game = this.bind('KeyDown', function() {
     Crafty.scene('Game');
@@ -111,7 +107,7 @@ Crafty.scene('Victory', function() {
       //----
       if (lintTimeDiff < lintHighScore) {
         localStorage.setItem('dvr_checker_high_score', lintTimeDiff);
-        alert("You've achieved a new high score!\n\n" + lintTimeDiff);
+        lstrHighScore = "You've achieved a new 'Fastest Time' of " + lintTimeDiff;
         lobjHighScore.innerHTML = lintTimeDiff;
       }
       
@@ -121,6 +117,22 @@ Crafty.scene('Victory', function() {
       lobjCurrentScore.innerHTML = '0';
     }
   }
+  
+  //----
+  // display victory text
+  //----
+  Crafty.e('2D, DOM, Text')
+    .attr({ x: Game.width()/2 - 96, 
+      y: Game.height()/2 - 36})
+    .textFont({size: '40px', weight: 'bold'})
+    .text('Victory!' + lstrHighScore);
+    
+  Crafty.e('2D, DOM, Text, NewScore')
+    .attr({ x: Game.width()/2 - 96, 
+      y: Game.height()/2 + 25})
+    .textFont({size: '20px', weight: 'bold'})
+    .text(lstrHighScore);
+  
 }, function() {
   this.unbind('KeyDown', this.restart_game);
 });

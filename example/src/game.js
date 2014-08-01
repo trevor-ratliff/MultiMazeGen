@@ -1,4 +1,4 @@
-Game = {
+var Game = {
   // This defines our grid's size and the size of each of its tiles
   map_grid: {
     width:  33,   //24,
@@ -47,6 +47,11 @@ Game = {
       var lobjCurrentScore = document.getElementById('txtCurrentScore');
       lobjCurrentScore.innerHTML = '0';
       
+      //----
+      // bind time update to games 'RenderScene' event
+      //----
+      Crafty.bind('RenderScene', UpdateTime);
+      
       // Start crafty and set a background color so that we can see it's working
       Crafty.init(Game.width(), Game.height());
       //Crafty.background('rgb(249, 223, 125)');
@@ -57,8 +62,31 @@ Game = {
     } catch (ex) {
       console&&console.log('something went wrong: ' + ex.toString());
     }
+  },
+  
+  // time update handler
+  UpdateTimez: function () {
+    //----
+    // set time, score etc
+    //----
+    if (gdteTime != null) {
+      var ldteTime = new Date();
+      var lintTimeDiff = (ldteTime - gdteTime)/1000;
+      document.getElementById('txtCurrentScore').innerHTML = lintTimeDiff;
+    }
   }
 }
 
 $text_css = { 'font-size': '24px', 'font-family': 'verdana', 'color': 'white', 'text-align': 'center' };
 var gdteTime = null;
+
+function UpdateTime() {
+  //----
+  // set time, score etc
+  //----
+  if (gdteTime != null) {
+    var ldteTime = new Date();
+    var lintTimeDiff = (ldteTime - gdteTime)/1000;
+    document.getElementById('txtCurrentScore').innerHTML = lintTimeDiff;
+  }
+}

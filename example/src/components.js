@@ -52,10 +52,10 @@ Crafty.c('PlayerCharacter', {
       .onHit('Treasure', this.visitTreasure)
 
       // player animations
-      .animate('PlayerMovingUp',    4, 8, 5)
-      .animate('PlayerMovingRight', 2, 8, 3)
-      .animate('PlayerMovingDown',  0, 8, 1)
-      .animate('PlayerMovingLeft',  6, 8, 7);
+      .reel('PlayerMovingUp',    500, 8, 4, 2)    //4, 8, 5)
+      .reel('PlayerMovingRight', 500, 8, 2, 2)    //2, 8, 3)
+      .reel('PlayerMovingDown',  500, 8, 0 ,2)    //0, 8, 1)
+      .reel('PlayerMovingLeft',  500, 8, 6, 2);   //6, 8, 7);
     
     // switch animations with direction
     var animation_speed = 8;
@@ -67,28 +67,28 @@ Crafty.c('PlayerCharacter', {
         gdteTime = new Date();
       }
       
-      //----
-      // set time, score etc
-      //----
-      if (gdteTime != null) {
-        var ldteTime = new Date();
-        var lintTimeDiff = (ldteTime - gdteTime)/1000;
-        document.getElementById('txtCurrentScore').innerHTML = lintTimeDiff;
-      }
+      //~ //----
+      //~ // set time, score etc
+      //~ //----
+      //~ if (gdteTime != null) {
+        //~ var ldteTime = new Date();
+        //~ var lintTimeDiff = (ldteTime - gdteTime)/1000;
+        //~ document.getElementById('txtCurrentScore').innerHTML = lintTimeDiff;
+      //~ }
       
       //----
       // move player
       //----
       if (data.x > 0) {
-        this.animate('PlayerMovingRight', animation_speed, -1);
+        this.animate('PlayerMovingRight', -1);
       } else if (data.x < 0) {
-        this.animate('PlayerMovingLeft', animation_speed, -1);
+        this.animate('PlayerMovingLeft', -1);
       } else if (data.y > 0) {
-        this.animate('PlayerMovingDown', animation_speed, -1);
+        this.animate('PlayerMovingDown', -1);
       } else if (data.y < 0) {
-        this.animate('PlayerMovingUp', animation_speed, -1);
+        this.animate('PlayerMovingUp', -1);
       } else {
-        this.stop();
+        this.pauseAnimation();
       }
     });
   },

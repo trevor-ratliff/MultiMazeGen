@@ -75,7 +75,7 @@ var Game = {
       document.getElementById('txtCurrentScore').innerHTML = lintTimeDiff;
     }
   }
-}
+};
 
 $text_css = { 'font-size': '24px', 'font-family': 'verdana', 'color': 'white', 'text-align': 'center' };
 var gdteTime = null;

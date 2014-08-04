@@ -77,9 +77,10 @@ Crafty.scene('Game', function() {
 Crafty.scene('Victory', function() {
   var lstrHighScore = '';
 
-  this.restart_game = this.bind('KeyDown', function() {
+  this.restart_game = function() {
     Crafty.scene('Game');
-  });
+  };
+  Crafty.bind('KeyDown', this.restart_game);
   
   //----
   // set time, score etc
@@ -123,15 +124,26 @@ Crafty.scene('Victory', function() {
   //----
   Crafty.e('2D, DOM, Text')
     .attr({ x: Game.width()/2 - 96, 
-      y: Game.height()/2 - 36})
+      y: Game.height()/2 - 36, width: '325px'})
     .textFont({size: '40px', weight: 'bold'})
-    .text('Victory!' + lstrHighScore);
-    
-  Crafty.e('2D, DOM, Text, NewScore')
+    .text('Victory!');
+  
+  Crafty.e('2D, DOM, Text')
     .attr({ x: Game.width()/2 - 96, 
-      y: Game.height()/2 + 25})
+      y: Game.height()/2 + 25, width: '325px'})
     .textFont({size: '20px', weight: 'bold'})
     .text(lstrHighScore);
+  
+  Crafty.e('2D, DOM, Text, NewScore')
+    .attr({ x: Game.width()/2 - 95, 
+      y: Game.height()/2 + 26, width: '325px'})
+    .textFont({size: '20px', weight: 'bold'})
+    .text(lstrHighScore);
+  
+  //----
+  // clear time
+  //----
+  gdteTime = null;
   
 }, function() {
   this.unbind('KeyDown', this.restart_game);

@@ -5,13 +5,13 @@ Crafty.c('Grid', {
     this.attr({
       w: Game.map_grid.tile.width,
       h: Game.map_grid.tile.height
-    })
+    });
   },
 
   // Locate this entity at the given position on the grid
   at: function(x, y) {
     if (x === undefined && y === undefined) {
-      return { x: this.x/Game.map_grid.tile.width, y: this.y/Game.map_grid.tile.height }
+      return { x: this.x/Game.map_grid.tile.width, y: this.y/Game.map_grid.tile.height };
     } else {
       this.attr({ x: x * Game.map_grid.tile.width, y: y * Game.map_grid.tile.height });
       return this;
@@ -44,18 +44,19 @@ Crafty.c('Bush', {
 // This is the player-controlled character
 Crafty.c('PlayerCharacter', {
   init: function() {
-    this.requires('Actor, Fourway, Collision, spr_player, SpriteAnimation')
+    this.requires('Actor, Fourway, Collision, spr_player, SpriteAnimation')  //, Color')
       .fourway(4)
       .stopOnSolids()
+      //~ .color('rgba(255, 100, 100, 0.2)')
 
-      // Whenever the PC touches a village, respond to the event
+      // Whenever the PC touches a treasure, respond to the event
       .onHit('Treasure', this.visitTreasure)
 
       // player animations
-      .reel('PlayerMovingUp',    500, 8, 4, 2)    //4, 8, 5)
-      .reel('PlayerMovingRight', 500, 8, 2, 2)    //2, 8, 3)
-      .reel('PlayerMovingDown',  500, 8, 0 ,2)    //0, 8, 1)
-      .reel('PlayerMovingLeft',  500, 8, 6, 2);   //6, 8, 7);
+      .reel('PlayerMovingUp',    250, 4, 8, 2)    //4, 8, 5)
+      .reel('PlayerMovingRight', 250, 2, 8, 2)    //2, 8, 3)
+      .reel('PlayerMovingDown',  250, 0, 8, 2)    //0, 8, 1)
+      .reel('PlayerMovingLeft',  250, 6, 8, 2);   //6, 8, 7);
     
     // switch animations with direction
     var animation_speed = 8;

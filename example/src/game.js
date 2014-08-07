@@ -62,18 +62,6 @@ var Game = {
     } catch (ex) {
       console&&console.log('something went wrong: ' + ex.toString());
     }
-  },
-  
-  // time update handler
-  UpdateTimez: function () {
-    //----
-    // set time, score etc
-    //----
-    if (gdteTime != null) {
-      var ldteTime = new Date();
-      var lintTimeDiff = (ldteTime - gdteTime)/1000;
-      document.getElementById('txtCurrentScore').innerHTML = lintTimeDiff;
-    }
   }
 };
 

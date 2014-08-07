@@ -128,11 +128,11 @@ Crafty.scene('Victory', function() {
     .textFont({size: '40px', weight: 'bold'})
     .text('Victory!');
   
-  Crafty.e('2D, DOM, Text')
-    .attr({ x: Game.width()/2 - 96, 
-      y: Game.height()/2 + 25, width: '325px'})
-    .textFont({size: '20px', weight: 'bold'})
-    .text(lstrHighScore);
+  //~ Crafty.e('2D, DOM, Text')
+    //~ .attr({ x: Game.width()/2 - 96, 
+      //~ y: Game.height()/2 + 25, width: '325px'})
+    //~ .textFont({size: '20px', weight: 'bold'})
+    //~ .text(lstrHighScore);
   
   Crafty.e('2D, DOM, Text, NewScore')
     .attr({ x: Game.width()/2 - 95, 

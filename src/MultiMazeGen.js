@@ -148,12 +148,13 @@ function BitMapping () {
 //
 /// @verbatim
 /// History:  Date  |  Programmer  |  Contact  |  Description  |
-///     _  |  Trevor Ratliff  |  trevor.w.ratliff@gmail.com  |  
+///     2013-06-12  |  Trevor Ratliff  |  trevor.w.ratliff@gmail.com  |  
 ///         class creation  |
 /// @endverbatim
 //====
 function MazeCell (vintRow, vintColumn) {
     this._column = vintColumn;
+    this._junction = false;
     this._row = vintRow;
     this.Visited = 0;
     
@@ -169,6 +170,36 @@ function MazeCell (vintRow, vintColumn) {
     } else {
         this.Walls = new BitMapping();
     }
+    
+    
+    //====
+    /// @fn setJunction()
+    /// @brief sets this cell as a junction
+    /// @author Trevor Ratliff
+    /// @date 2014-08-19
+    /// @return bool -- for success
+    //  
+    //  Definitions:
+    //      lblnReturn -- value to return [true = success, false = failure]
+    //  
+    /// @verbatim
+    /// History:  Date  |  Programmer  |  Contact  |  Description  |
+    ///     2014-08-19  |  Trevor Ratliff  |  trevor.w.ratliff@gmail.com  |  
+    ///         function creation  |
+    /// @endverbatim
+    //====
+    this.setJunction = function () {
+        var lblnReturn = false;
+        
+        try {
+            this._junction = true
+            lblnReturn = true;
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
+        }
+        
+        return lblnReturn;
+    };
     
     
     //====
@@ -205,6 +236,11 @@ function MazeCell (vintRow, vintColumn) {
             // add walls
             //----
             lstrReturn += "Walls:     " + this.Walls.toString() + "\n";
+            
+            //----
+            // add junctions
+            //----
+            lstrReturn += "Junction:  " + this._junction.toString() + "\n";
             
             //----
             // add solution
@@ -256,8 +292,9 @@ function WallMap (vstrMaze) {
     this._arrWalls.pop();
     
     this.IsWall = function (vintRow, vintColumn) {
+        var lblnReturn = false;
+        
         try {
-            var lblnReturn = false;
             var lstrChar = typeof this._arrWalls[vintRow] != "undefined" ? 
                 this._arrWalls[vintRow].substr(vintColumn, 1) : "";
             
@@ -272,12 +309,30 @@ function WallMap (vstrMaze) {
     };
     
     this.IsBorder = function (vintRow, vintColumn) {
+        var lblnReturn = false;
+        
         try {
-            var lblnReturn = false;
             var lstrChar = typeof this._arrWalls[vintRow] != "undefined" ? 
                 this._arrWalls[vintRow].substr(vintColumn, 1) : "";
             
             if (lstrChar == "@") {
+                lblnReturn = true;
+            }
+        } catch (err) {
+            if (typeof console != "undefined") console.log(err.toString());
+        }
+        
+        return lblnReturn;
+    };
+    
+    this.IsJunction = function (vintRow, vintColumn) {
+        var lblnReturn = false;
+        
+        try {
+            var lstrChar = typeof this._arrWalls[vintRow] != "undefined" ? 
+                this._arrWalls[vintRow].substr(vintColumn, 1) : "";
+            
+            if (lstrChar == "J") {
                 lblnReturn = true;
             }
         } catch (err) {
@@ -694,6 +749,7 @@ function MazeMap (vintRows, vintColumns) {
                     // add this coordinate to the junction stack
                     //----
                     this.JunctionStack.push(lintRow + "," + lintColumn);
+                    this.Map[lintRow][lintColumn].setJunction()
                     
                     //----
                     // randomly pick a neighbor
